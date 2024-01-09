@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  EmojiMemoryGameView.swift
 //  MemoriseGame
 //
 //  Created by Paul Y on 2023-12-03.
@@ -8,7 +8,9 @@
 import SwiftUI
 
 
-struct ContentView: View {
+struct EmojiMemoryGameView: View {
+    
+    var viewModel: EmojiMemoryGame
     
     @State var emojiType: EmojiType = .bugs
     @State private var emojis: [String] = ["🐝","🦋","🐌","🐞","🐠","🦀","🐢","🐙","🦐","🦨", "🦚"]
@@ -57,10 +59,8 @@ struct ContentView: View {
                         Text("Veggies")
                     }
                 })
-                
                 .padding()
             }
-            cardCountAdjusters
         }
         .padding()
         .onAppear {
@@ -75,34 +75,6 @@ struct ContentView: View {
             }
         }
         .foregroundColor(.teal)
-    }
-    
-    var cardCountAdjusters: some View {
-        HStack {
-            cardRemover
-            Spacer ()
-            cardAdder
-        }
-        .padding()
-        .imageScale(.large)
-        .font(.largeTitle)
-    }
-    
-    func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
-        Button(action: {
-            cardCount += offset
-        }, label: {
-            Image(systemName: symbol)
-        })
-        .disabled(cardCount + offset < 1 || cardCount + offset > emojiType.emojiList.count)
-    }
-    
-    var cardRemover: some View {
-        return cardCountAdjuster(by: -1, symbol: "minus.circle.fill")
-    }
-    
-    var cardAdder: some View {
-        cardCountAdjuster(by: 1, symbol: "plus.circle.fill")
     }
 }
 
@@ -149,5 +121,5 @@ struct CardView: View {
 }
 
 #Preview {
-    ContentView()
+    EmojiMemoryGameView()
 }
