@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct EmojiMemoryGameView: View {
     @ObservedObject  var viewModel: EmojiMemoryGame
 
@@ -45,7 +44,10 @@ struct EmojiMemoryGameView: View {
                     }
             }
         }
-        .foregroundColor(.teal)
+    //    .foregroundColor(.teal)
+       // .foregroundColor(viewModel.)
+        .foregroundColor(viewModel.theme.color)
+        
     }
 }
 

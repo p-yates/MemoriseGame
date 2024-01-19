@@ -10,12 +10,15 @@ import Foundation
 struct MemoriseGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
     
-    init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+    var theme: Theme
+    
+    init(theme: Theme, numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+        self.theme = theme
         cards = []
         for pairIndex in 0..<max(2,numberOfPairsOfCards) {
             let content = cardContentFactory(pairIndex)
-            cards.append(Card(content: content, id: "\(pairIndex+1)a"))
-            cards.append(Card(content: content, id: "\(pairIndex+1)b"))
+            cards.append(Card(content: content, theme: theme, id: "\(pairIndex+1)a"))
+            cards.append(Card(content: content, theme: theme, id: "\(pairIndex+1)b"))
         }
         shuffle()
     }
@@ -59,11 +62,11 @@ struct MemoriseGame<CardContent> where CardContent: Equatable {
     }
     
     struct Card: Equatable, Identifiable, CustomDebugStringConvertible {
-
         
         var isFaceUp = false
         var isMatched = false
         let content: CardContent
+        var theme: Theme
         
         var id: String
         var debugDescription: String {
