@@ -17,13 +17,22 @@ struct EmojiMemoryGameView: View {
                 cards
                     .animation(.default, value: viewModel.cards)
             }
-            Button("Shuffle") {
-                viewModel.shuffle()
+            HStack{
+                
+                Button("Shuffle") {
+                    viewModel.shuffle()
+                }
+                .padding()
+                Spacer()
+                Button("New game"){
+                    viewModel.newGame()
+                }
+                .padding()
             }
+            
         }
         .padding()
     }
-    
     
     var cards: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 85),spacing: 0)]) {

@@ -17,6 +17,7 @@ struct MemoriseGame<CardContent> where CardContent: Equatable {
             cards.append(Card(content: content, id: "\(pairIndex+1)a"))
             cards.append(Card(content: content, id: "\(pairIndex+1)b"))
         }
+        shuffle()
     }
     
     var indexOfTheOneAndOnlyFaceUpCard: Int? {
@@ -72,6 +73,6 @@ struct MemoriseGame<CardContent> where CardContent: Equatable {
 }
 extension Array {
     var only: Element? {
-        count == 1 ? frist : nil
+        count == 1 ? first : nil
     }
 }
