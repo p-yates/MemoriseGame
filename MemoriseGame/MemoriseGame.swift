@@ -10,15 +10,15 @@ import Foundation
 struct MemoriseGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
     
-    var theme: Theme
+    var score: Int
     
-    init(theme: Theme, numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
-        self.theme = theme
+    init(score: Int, numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+        self.score = score
         cards = []
         for pairIndex in 0..<max(2,numberOfPairsOfCards) {
             let content = cardContentFactory(pairIndex)
-            cards.append(Card(content: content, theme: theme, id: "\(pairIndex+1)a"))
-            cards.append(Card(content: content, theme: theme, id: "\(pairIndex+1)b"))
+            cards.append(Card(content: content, id: "\(pairIndex+1)a"))
+            cards.append(Card(content: content, id: "\(pairIndex+1)b"))
         }
         shuffle()
     }
@@ -29,20 +29,40 @@ struct MemoriseGame<CardContent> where CardContent: Equatable {
     }
     
     mutating func choose(_ card: Card) {
-        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}) {
-            if !cards[chosenIndex].isFaceUp && !cards[chosenIndex].isMatched {
+        
+        guard let chosenIndex = cards.firstIndex(where: { $0.id == card.id }) else { return }
+       
+        //check it's a valid card to select
+        if !cards[chosenIndex].isFaceUp && !cards[chosenIndex].isMatched {
+            
+            // checks if there is already a card face up
+            if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
                 
-                if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
-                    if cards[chosenIndex].content == cards[potentialMatchIndex].content {
-                        cards[chosenIndex].isMatched = true
-                        cards[potentialMatchIndex].isMatched = true
-                    }
+                //if the two chosen cards match, set them to matched and add 2 to the score
+                if cards[chosenIndex].content == cards[potentialMatchIndex].content {
+                    cards[chosenIndex].isMatched = true
+                    cards[potentialMatchIndex].isMatched = true
+                    score += 2 //2 points for a sucessful match
+                    print(score)
+                    
+                //if the two chosen cards don't match and either of them has already been seen, reduce the score
                 } else {
-                    indexOfTheOneAndOnlyFaceUpCard = chosenIndex
+                    if cards[chosenIndex].hasBeenSeen || cards[potentialMatchIndex].hasBeenSeen {
+                        score -= 1
+                        print(score)
+                    }
+                    
+                    //set the cards to has been seen (we've already done all the other checks on them by this point
+                    cards[chosenIndex].hasBeenSeen = true
+                    cards[potentialMatchIndex].hasBeenSeen = true
                 }
-                cards[chosenIndex].isFaceUp = true
+                
+                //if there was not already a card face up, then the once we selected will become the only face up card, at the index chosen so set it and put it face up
+            } else {
+                indexOfTheOneAndOnlyFaceUpCard = chosenIndex
             }
-  
+            cards[chosenIndex].isFaceUp = true
+            
         }
     }
     
@@ -65,12 +85,12 @@ struct MemoriseGame<CardContent> where CardContent: Equatable {
         
         var isFaceUp = false
         var isMatched = false
+        var hasBeenSeen = false
         let content: CardContent
-        var theme: Theme
         
         var id: String
         var debugDescription: String {
-            "\(id): \(content) \(isFaceUp ? "up" : "down") \(isMatched  ? "matched" : "")"
+            "\(id): \(content) \(isFaceUp ? "up" : "down") \(isMatched  ? "matched" : "") \(hasBeenSeen ? "seen" : "unseen")"
         }
     }
 }

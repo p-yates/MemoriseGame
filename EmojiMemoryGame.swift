@@ -8,13 +8,13 @@
 import SwiftUI
 
 class EmojiMemoryGame: ObservableObject {
+    lazy var theme: Theme = .animals
     
-    private static func createMemoryGame() -> MemoriseGame<String> {
-        let theme = Theme.allCases.randomElement()!
+    private static func createMemoryGame(withInitialScore initialScore: Int, theme: Theme) -> MemoriseGame<String> {
         print(theme)
         print(theme.color)
-        let cardColorTheme = theme.color
-        return MemoriseGame(theme: theme, numberOfPairsOfCards: theme.emojis.count) { pairIndex in
+        print(initialScore)
+        return MemoriseGame(score: initialScore, numberOfPairsOfCards: theme.emojis.count) { pairIndex in
             if (theme.emojis.indices.contains(pairIndex)) {
                 return theme.emojis[pairIndex]
             } else {
@@ -23,15 +23,15 @@ class EmojiMemoryGame: ObservableObject {
         }
     }
     
-    @Published private var model = createMemoryGame()
+    @Published private var model = createMemoryGame(withInitialScore: 0, theme: .animals)
     
     var cards: Array<MemoriseGame<String>.Card> {
         return model.cards
     }
     
-    var theme: Theme {
-            return model.theme
-        }
+    var score: Int {
+        return model.score
+    }
     
     // MARK: - Intents
     
@@ -43,8 +43,13 @@ class EmojiMemoryGame: ObservableObject {
         model.choose(card)
     }
     
-    func newGame() {
-        model = EmojiMemoryGame.createMemoryGame()
+    func newGame(withInitialScore initialScore: Int = 0) {
+        model = EmojiMemoryGame.createMemoryGame(withInitialScore: initialScore, theme: randomisedTheme())
         shuffle()
+    }
+    
+    func randomisedTheme() -> Theme {
+        theme = Theme.allCases.randomElement()!
+        return theme
     }
 }

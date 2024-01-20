@@ -12,6 +12,16 @@ struct EmojiMemoryGameView: View {
 
     var body: some View {
         VStack{
+            HStack {
+                Text(viewModel.theme.name)
+                    .padding(.horizontal)
+                Text("Score: \(viewModel.score)")
+                    .contentTransition(.numericText())
+                    .padding(.horizontal)
+            }
+            .font(.title)
+            .padding()
+            
             ScrollView {
                 cards
                     .animation(.default, value: viewModel.cards)
@@ -28,7 +38,6 @@ struct EmojiMemoryGameView: View {
                 }
                 .padding()
             }
-            
         }
         .padding()
     }
@@ -44,10 +53,7 @@ struct EmojiMemoryGameView: View {
                     }
             }
         }
-    //    .foregroundColor(.teal)
-       // .foregroundColor(viewModel.)
         .foregroundColor(viewModel.theme.color)
-        
     }
 }
 
