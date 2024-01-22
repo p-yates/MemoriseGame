@@ -14,7 +14,8 @@ class EmojiMemoryGame: ObservableObject {
         print(theme)
         print(theme.color)
         print(initialScore)
-        return MemoriseGame(score: initialScore, numberOfPairsOfCards: theme.emojis.count) { pairIndex in
+        //once not fiddling with shapes, swap the numberOfPairsOfCards 4 back to  numberOfPairsOfCards: theme.emojis.count
+        return MemoriseGame(score: initialScore, numberOfPairsOfCards: 4) { pairIndex in
             if (theme.emojis.indices.contains(pairIndex)) {
                 return theme.emojis[pairIndex]
             } else {
